@@ -1,0 +1,66 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  BUNDLE_ID: style.xero.appswap.ci
+
+jobs:
+  build:
+    runs-on: xcode-27
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_27.0.app/Contents/Developer
+      XCODE_BUILD: 27A266a
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check the pinned Xcode build
+        run: |
+          xcodebuild -version
+          swift --version
+          [ "$(xcodebuild -version | awk '/^Build version/ { print $3 }')" = "$XCODE_BUILD" ]
+      - name: Test
+        run: swift test --no-color-diagnostics
+      - name: Bundle
+        run: scripts/bundle.sh
+        env:
+          SIGN_IDENTITY: "-"
+          BUILD_NUMBER: ${{ github.run_number }}
+      - name: Selftest
+        run: |
+          dist/appswap.app/Contents/MacOS/appswap --selftest | tee selftest.txt
+          grep -qx "bundle=$BUNDLE_ID" selftest.txt
+          grep -q '^sdk=27\.' selftest.txt
+          [ "$(tail -n 1 selftest.txt)" = ok ]
+      - name: Zip
+        # ditto keeps the signature and the executable bit, which a plain artifact upload drops.
+        run: ditto -c -k --keepParent dist/appswap.app appswap.zip
+      - uses: actions/upload-artifact@v7
+        with:
+          name: appswap
+          path: appswap.zip
+          retention-days: 7
+
+  selftest:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, macos-26]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: appswap
+      - name: Selftest
+        run: |
+          sw_vers
+          ditto -x -k appswap.zip .
+          appswap.app/Contents/MacOS/appswap --selftest | tee selftest.txt
+          grep -qx "bundle=$BUNDLE_ID" selftest.txt
+          grep -q '^sdk=27\.' selftest.txt
+          [ "$(tail -n 1 selftest.txt)" = ok ]

@@ -1,0 +1,111 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# EXPORT IGNORE
+# exclude non-essential files from git archive / source tarballs
+# ─────────────────────────────────────────────────────────────────────────────
+
+.gitattributes           export-ignore
+.gitignore               export-ignore
+.gitkeep                 export-ignore
+
+# ─────────────────────────────────────────────────────────────────────────────
+# LINE ENDING NORMALIZATION
+# every text file is LF in the repo and on checkout. text=auto eol=lf covers
+# any type not listed; the list forces text even where git guesses binary
+# ─────────────────────────────────────────────────────────────────────────────
+
+*                        text=auto eol=lf
+
+# sources
+*.ts                     text eol=lf
+*.tsx                    text eol=lf
+*.cts                    text eol=lf
+*.mts                    text eol=lf
+*.js                     text eol=lf
+*.jsx                    text eol=lf
+*.cjs                    text eol=lf
+*.mjs                    text eol=lf
+*.sh                     text eol=lf
+*.zsh                    text eol=lf
+*.lua                    text eol=lf
+*.py                     text eol=lf
+*.rs                     text eol=lf
+*.c                      text eol=lf
+*.h                      text eol=lf
+*.swift                  text eol=lf
+*.kt                     text eol=lf
+*.java                   text eol=lf
+*.php                    text eol=lf
+
+# config and data
+*.json                   text eol=lf
+*.yml                    text eol=lf
+*.yaml                   text eol=lf
+*.toml                   text eol=lf
+*.xml                    text eol=lf
+*.gradle                 text eol=lf
+
+# web
+*.html                   text eol=lf
+*.svg                    text eol=lf
+*.css                    text eol=lf
+
+# docs and text
+*.md                     text eol=lf diff=markdown
+*.txt                    text eol=lf
+
+# source maps
+*.map                    text eol=lf
+
+# git and package files
+*.gitattributes          text eol=lf
+*.gitignore              text eol=lf
+*.npmignore              text eol=lf
+*.lock                   text eol=lf
+*.patch                  -text
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BYTE-EXACT FILES
+# fixtures whose bytes are the test: no normalization, no textual diff.
+# list them per project, e.g. scene art or spec test vectors
+# ─────────────────────────────────────────────────────────────────────────────
+
+# *.ans                  -text
+# test/vectors/**        -text
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BINARY
+# ─────────────────────────────────────────────────────────────────────────────
+
+bun.lockb                binary
+*.wasm                   binary
+*.node                   binary
+*.png                    binary
+*.jpg                    binary
+*.jpeg                   binary
+*.gif                    binary
+*.bmp                    binary
+*.ico                    binary
+*.webp                   binary
+*.pdf                    binary
+*.woff                   binary
+*.woff2                  binary
+*.ttf                    binary
+*.otf                    binary
+*.zip                    binary
+*.gz                     binary
+*.pack                   binary
+*.idx                    binary
+
+# ─────────────────────────────────────────────────────────────────────────────
+# GITHUB LINGUIST
+# control counts and language stats
+# ─────────────────────────────────────────────────────────────────────────────
+
+# docs count as documentation
+docs/**                  linguist-documentation=true
+docs/**                  linguist-detectable=true
+
+# generated files don't count toward stats
+*.map                    linguist-generated=true
+dist/**                  linguist-generated=true
+build/**                 linguist-generated=true

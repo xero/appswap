@@ -1,0 +1,8 @@
+.build/
+.swiftpm/
+dist/
+.env
+*.p12
+*.keychain-db
+*.xcresult
+.DS_Store
